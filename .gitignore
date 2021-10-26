@@ -1,0 +1,38 @@
+# Compiled class files
+*.class
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+out/
+artifacts/
+
+# Mac
+.DS_Store
+
+# vscode
+.vscode
+/vscode
+
+# gradle extra files:
+build/
+.gradle/
+bin/
+.run
+.run/
+
+
+# unknown files
+*.hprof
+*.log
+
+# vs code :
+.vscode/
+.vscode
+
