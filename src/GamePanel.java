@@ -6,6 +6,7 @@ public class GamePanel extends JPanel {
 
     public GamePanel(CellView[] cells) {
         this.cells = cells;
+        this.setBackground(Color.BLACK);
 
     }
 

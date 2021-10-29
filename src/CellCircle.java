@@ -18,7 +18,7 @@ public class CellCircle {
             cells[i].cellView.x = (int) (radius * Math.cos(angle * i) + h);
             cells[i].cellView.y = (int) (radius * Math.sin(angle * i) + k);
             cells[i].cellView.alive = cells[i].getState() == 1;
-            cells[i].cellView.size = 1000/n;
+            cells[i].cellView.size = 700/n;
         }
         this.cells = cells;
     }
