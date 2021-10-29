@@ -1,13 +1,22 @@
 public class Controller {
     public static void main(String args[]) {
+    	
         System.out.println("Test liste OK");
-        Cell[] firstCells = new Cell[200];
-        for (int i = 1; i < 200; i++) {
+        Cell[] firstCells = new Cell[10];
+        
+        for (int i = 1; i < 10; i++) {
             firstCells[i] = new Cell(0);
         }
+        
         firstCells[0] = new Cell(1);
-        firstCells[11] = new Cell(1);
         Controller controller = new Controller();
+        
+    	
+    	/*
+    	Cell[] firstCells = new Cell[8];
+    	Controller controller = new Controller();
+    	*/
+    	
         new View(controller, firstCells);
     }
 

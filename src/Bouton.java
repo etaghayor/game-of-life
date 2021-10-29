@@ -17,9 +17,9 @@ public class Bouton extends JButton {
 		b = new JButton(s);
 		b.setBackground(Color.CYAN); // couleur fond
 		b.setForeground(Color.BLACK);// Couleur ecriture
-		b.setPreferredSize(new Dimension(345, 210));
-		b.setMaximumSize(new Dimension(345, 210));
-		b.setMinimumSize(new Dimension(345, 210));
+		b.setPreferredSize(new Dimension(100, 50));
+		b.setMaximumSize(new Dimension(100, 50));
+		b.setMinimumSize(new Dimension(100, 50));
 		b.setFocusPainted(false);
 	}
 
