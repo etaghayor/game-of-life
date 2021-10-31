@@ -1,5 +1,11 @@
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Set;
+
 public class Controller {
     private int n;
+    private ArrayList<String> cells=new ArrayList<String>();
+    private boolean res;
 
     public static void main(String args[]) {
 
@@ -10,6 +16,7 @@ public class Controller {
 
     public Cell[] startGameOfLife(Cell[] firstCells) {
         int n = firstCells.length;
+        String s="";
         Cell[] nextStateCells = new Cell[n];
         for (int i = 0; i < n; i++) {
             if (firstCells[i].getState() == 1) {
@@ -22,10 +29,43 @@ public class Controller {
                     nextStateCells[i] = new Cell(1);
                 else
                     nextStateCells[i] = new Cell(0);
+            }
+            System.out.print(nextStateCells[i].getState());
+        }
+        res=checkcycle(cells,nextStateCells);
+        System.out.println();
+        addarraylist(nextStateCells,cells);
+        return nextStateCells;
+    }
 
+    private void addarraylist(Cell[] cells,ArrayList<String> c){
+        String s="";
+        for (int j = 0; j < cells.length; j++) {
+            s+=String.valueOf(cells[j].getState());
+        }
+        c.add(s);
+    }
+
+    private boolean checkcycle(ArrayList<String> cells,Cell [] c){
+        String s="";
+        for (int j = 0; j < c.length; j++) {
+            s+=String.valueOf(c[j].getState());
+        }
+        for (int i = 0; i < cells.size(); i++) {
+            if(s.equals(cells.get(i))){
+                return true;
             }
         }
-        return nextStateCells;
+        return false;
+        /*ça marche aussi (à vous de choisir)
+        Set<String> c=new HashSet<String>();
+        c.addAll(cells);
+        if(c.size()<cells.size()){
+            return true;
+        }
+        return false;
+         */
+
     }
 
     private boolean atLeastOneNeighbor(Cell[] cells, int i) {
@@ -53,6 +93,14 @@ public class Controller {
         }
     }
 
+    private void printCells(ArrayList<Cell[]> cells){
+
+    }
+
+    private boolean checkIfexitsCycle (Cell[] cells,Cell[][] save){
+        return true;
+    }
+
     public int getN() {
         return n;
     }
@@ -61,4 +109,7 @@ public class Controller {
         this.n = n;
     }
 
+    public boolean getres(){
+        return res;
+    }
 }

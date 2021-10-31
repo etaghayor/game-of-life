@@ -1,11 +1,7 @@
 import javax.swing.*;
+import javax.swing.text.html.ImageView;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.*;
 
 public class View extends JFrame {
@@ -28,7 +24,9 @@ public class View extends JFrame {
         this.setResizable(true); // taille fixe
         setDefaultCloseOperation(EXIT_ON_CLOSE); // exit
         setLocationRelativeTo(null);
-
+        //icon
+        ImageIcon logo=new ImageIcon("index.jpeg");
+        this.setIconImage(logo.getImage());
         this.controller = controller;
 //        this.list = l;
         // JPanel boutons / show
@@ -94,7 +92,32 @@ public class View extends JFrame {
                     gamePanel.revalidate();
                     this.repaint();
                     this.revalidate();
+
+                    //JOptionPane
+                    int x=-1;
+                    String [] option ={"choose a new configuration","Quit"};
                     list = controller.startGameOfLife(list);
+                    JLabel j=new JLabel("Cycle detected",SwingConstants.CENTER);
+                    j.setFont(new Font("Serif", Font.BOLD, 20));
+                    if(controller.getres()==true){
+                        //JOptionPane.showOptionDialog(null,"cycle detected",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,option);
+                        x =JOptionPane.showOptionDialog(null, j,
+                                "",
+                                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, option,option[0]);
+                    }
+                    if(x==1){
+                        System.exit(0);
+                    }else if(x==0){
+                        JOptionPane.getRootFrame().dispose();
+                        /*
+                        this.remove(gamePanel);
+                        this.add(menu);
+                        this.repaint();
+                        this.revalidate();
+                         */
+                    }else{
+
+                    }
                     try {
                         Thread.sleep(800);
                     } catch (InterruptedException ex) {
