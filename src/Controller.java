@@ -93,14 +93,6 @@ public class Controller {
         }
     }
 
-    private void printCells(ArrayList<Cell[]> cells){
-
-    }
-
-    private boolean checkIfexitsCycle (Cell[] cells,Cell[][] save){
-        return true;
-    }
-
     public int getN() {
         return n;
     }
