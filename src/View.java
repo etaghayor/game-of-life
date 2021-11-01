@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.text.html.ImageView;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -8,7 +7,7 @@ public class View extends JFrame {
     // Bouton
     Bouton jeu; // jeu
 
-    final static int WIDTH = 650, HEIGHT = 650;
+    final static int WIDTH = 700, HEIGHT = 700;
     // JPanel / JLabel
     JPanel menu;
     JPanel jouer;
@@ -25,7 +24,7 @@ public class View extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE); // exit
         setLocationRelativeTo(null);
         //icon
-        ImageIcon logo=new ImageIcon("index.jpeg");
+        ImageIcon logo = new ImageIcon("index.jpeg");
         this.setIconImage(logo.getImage());
         this.controller = controller;
 //        this.list = l;
@@ -76,8 +75,8 @@ public class View extends JFrame {
             // CODE
             this.menu.setVisible(false);
             this.jouer.setVisible(false);
-            CellCircle cells = new CellCircle((int) (HEIGHT / 3), list.length, (int) (WIDTH / 2.3),
-                    (int) (HEIGHT / 2.3), list);
+            CellCircle cells = new CellCircle(HEIGHT / 3, list.length, WIDTH / 2,
+                    HEIGHT / 2, list);
             GamePanel gamePanel = new GamePanel(cells.getCellViews());
             gamePanel.setBackground(Color.BLACK);
             this.add(gamePanel);
@@ -85,37 +84,31 @@ public class View extends JFrame {
             this.revalidate();
             Thread t = new Thread(() -> {
                 while (true) {
-                    CellCircle tmp = new CellCircle((int) (HEIGHT / 3), list.length, (int) (WIDTH / 2.3),
-                            (int) (HEIGHT / 2.3), list);
-                    gamePanel.setCells(tmp.getCellViews());
                     gamePanel.repaint();
                     gamePanel.revalidate();
                     this.repaint();
                     this.revalidate();
+                    cells.setList(list);
+                    gamePanel.setCells(cells.getCellViews());
 
                     //JOptionPane
-                    int x=-1;
-                    String [] option ={"choose a new configuration","Quit"};
                     list = controller.startGameOfLife(list);
-                    JLabel j=new JLabel("Cycle detected",SwingConstants.CENTER);
+                    int x = -1;
+                    String[] option = {"choose a new configuration", "Quit"};
+                    JLabel j = new JLabel("Cycle detected", SwingConstants.CENTER);
                     j.setFont(new Font("Serif", Font.BOLD, 20));
-                    if(controller.getres()==true){
+                    if (controller.isCycleFound()) {
                         //JOptionPane.showOptionDialog(null,"cycle detected",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,option);
-                        x =JOptionPane.showOptionDialog(null, j,
+                        x = JOptionPane.showOptionDialog(null, j,
                                 "",
-                                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, option,option[0]);
+                                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, option, option[0]);
                     }
-                    if(x==1){
+                    if (x == 1) {
                         System.exit(0);
-                    }else if(x==0){
-                        JOptionPane.getRootFrame().dispose();
-                        /*
-                        this.remove(gamePanel);
-                        this.add(menu);
-                        this.repaint();
-                        this.revalidate();
-                         */
-                    }else{
+                    } else if (x == 0) {
+                        controller.reset();
+                        break;
+                    } else {
 
                     }
                     try {

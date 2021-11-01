@@ -6,6 +6,7 @@ public class CellCircle {
     private final Random random = new Random();
     private final int radius;
     private final int n;
+    private double angle;
     private Cell[] cells;
 
     public CellCircle(int radius, int n, int h, int k, Cell[] cells) {
@@ -13,14 +14,8 @@ public class CellCircle {
         this.h = h;
         this.k = k;
         this.n = n;
-        double angle = 2*Math.PI / n;
-        for (int i = 0; i < n; i++) {
-            cells[i].cellView.x = (int) (radius * Math.cos(angle * i) + h);
-            cells[i].cellView.y = (int) (radius * Math.sin(angle * i) + k);
-            cells[i].cellView.alive = cells[i].getState() == 1;
-            cells[i].cellView.size = 700/n;
-        }
-        this.cells = cells;
+        angle = 2 * Math.PI / n;
+        this.setList(cells);
     }
 
     public CellView[] getCellViews() {
@@ -37,6 +32,17 @@ public class CellCircle {
 
     public int getK() {
         return k;
+    }
+
+    public void setList(Cell[] cells) {
+        this.cells = cells;
+        int s = 250 / n;
+        for (int i = 0; i < n; i++) {
+            cells[i].cellView.x = (int) (radius * Math.cos(angle * i) + h - s);
+            cells[i].cellView.y = (int) (radius * Math.sin(angle * i) + k - s);
+            cells[i].cellView.alive = cells[i].getState() == 1;
+            cells[i].cellView.size = 500 / n;
+        }
     }
 }
 

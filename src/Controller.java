@@ -1,22 +1,22 @@
-import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Arrays;
 
 public class Controller {
     private int n;
-    private ArrayList<String> cells=new ArrayList<String>();
-    private boolean res;
+    private ArrayList<String> cells = new ArrayList<String>();
+    private boolean cycleFound;
+    private View view;
 
     public static void main(String args[]) {
 
         System.out.println("Test liste OK");
         Controller controller = new Controller();
-        new View(controller);
+        controller.view = new View(controller);
     }
 
     public Cell[] startGameOfLife(Cell[] firstCells) {
         int n = firstCells.length;
-        String s="";
+        System.out.println(cellsToString(firstCells));
         Cell[] nextStateCells = new Cell[n];
         for (int i = 0; i < n; i++) {
             if (firstCells[i].getState() == 1) {
@@ -30,29 +30,21 @@ public class Controller {
                 else
                     nextStateCells[i] = new Cell(0);
             }
-            System.out.print(nextStateCells[i].getState());
         }
-        res=checkcycle(cells,nextStateCells);
-        System.out.println();
-        addarraylist(nextStateCells,cells);
+        cycleFound = checkCycle(cells, nextStateCells);
+        addCellToList(cells, nextStateCells);
         return nextStateCells;
     }
 
-    private void addarraylist(Cell[] cells,ArrayList<String> c){
-        String s="";
-        for (int j = 0; j < cells.length; j++) {
-            s+=String.valueOf(cells[j].getState());
-        }
-        c.add(s);
+    private void addCellToList(ArrayList<String> cellStrings, Cell[] cells) {
+        cellStrings.add(cellsToString(cells));
     }
 
-    private boolean checkcycle(ArrayList<String> cells,Cell [] c){
-        String s="";
-        for (int j = 0; j < c.length; j++) {
-            s+=String.valueOf(c[j].getState());
-        }
-        for (int i = 0; i < cells.size(); i++) {
-            if(s.equals(cells.get(i))){
+    private boolean checkCycle(ArrayList<String> cellStrings, Cell[] cells) {
+        String s = cellsToString(cells);
+        for (String cell : cellStrings) {
+            if (s.equals(cell)) {
+                System.out.println(cellsToString(cells));
                 return true;
             }
         }
@@ -66,6 +58,13 @@ public class Controller {
         return false;
          */
 
+    }
+
+    private String cellsToString(Cell[] cells) {
+        StringBuilder s = new StringBuilder();
+        for (Cell c : cells)
+            s.append(c);
+        return s.toString();
     }
 
     private boolean atLeastOneNeighbor(Cell[] cells, int i) {
@@ -93,6 +92,15 @@ public class Controller {
         }
     }
 
+    public void reset() {
+        this.cells.clear();
+        this.n = 0;
+        this.cycleFound = false;
+        view.setVisible(false);
+        view.dispose();
+        view = new View(this);
+    }
+
     public int getN() {
         return n;
     }
@@ -101,7 +109,7 @@ public class Controller {
         this.n = n;
     }
 
-    public boolean getres(){
-        return res;
+    public boolean isCycleFound() {
+        return cycleFound;
     }
 }
