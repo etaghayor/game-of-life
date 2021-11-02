@@ -4,11 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class View extends JFrame {
-    // Bouton
-    Bouton jeu; // jeu
+    Bouton jeu;
 
     final static int WIDTH = 700, HEIGHT = 700;
-    // JPanel / JLabel
     JPanel menu;
     JPanel jouer;
     JPanel entre;
@@ -17,6 +15,107 @@ public class View extends JFrame {
     Controller controller;
 
     public View(Controller controller) {
+        this.controller = controller;
+        init();
+
+
+        jeu.getBouton().addActionListener((ActionEvent e) -> {
+            // VERIFICATION N INT POUR LE NOMBRE DE CELLULES
+            if (!isInt(nombre.getText())) {
+                return;
+            }
+            // SI N EST UN INT ALORS ON CREER N CELLULES
+
+            controller.setN(Integer.parseInt(nombre.getText()));
+            Cell[] firstCells = new Cell[controller.getN()];
+            for (int i = 0; i < controller.getN(); i++) {
+                firstCells[i] = new Cell(false);
+            }
+            this.list = firstCells;
+
+            // setExtendedState(JFrame.MAXIMIZED_BOTH);
+            setLocationRelativeTo(null);
+            setSize(WIDTH, HEIGHT);
+            // CODE
+            this.menu.setVisible(false);
+            this.jouer.setVisible(false);
+            CellCircle cellCircle = new CellCircle(HEIGHT / 3, list.length, WIDTH / 2,
+                    HEIGHT / 2, list);
+            GamePanel gamePanel = new GamePanel(cellCircle);
+            gamePanel.setBackground(Color.BLACK);
+            Bouton startButton = new Bouton("Start");
+            gamePanel.setLayout(new FlowLayout());
+            startButton.setHorizontalAlignment(SwingConstants.CENTER);
+            startButton.setVerticalAlignment(SwingConstants.CENTER);
+            startButton.setBackground(Color.CYAN); // couleur fond
+            startButton.setForeground(Color.BLACK);// Couleur ecriture
+            startButton.setText("Start");
+            startButton.setPreferredSize(new Dimension(100, 50));
+            startButton.setMaximumSize(new Dimension(100, 50));
+            startButton.setMinimumSize(new Dimension(100, 50));
+            cellCircle.setList(list);
+            gamePanel.add(startButton);
+            this.add(gamePanel);
+            this.repaint();
+            this.revalidate();
+            startButton.addActionListener(event -> {
+                list = gamePanel.cells.getCells();
+                Thread t = new Thread(() -> {
+                    while (true) {
+                        refreshCells(gamePanel, cellCircle);
+                        //JOptionPane
+                        list = controller.startGameOfLife(list);
+                        int x = -1;
+                        String[] option = {"choose a new configuration", "Quit"};
+                        JLabel j = new JLabel("Cycle detected", SwingConstants.CENTER);
+                        j.setFont(new Font("Serif", Font.BOLD, 20));
+                        if (controller.isCycleFound()) {
+                            //JOptionPane.showOptionDialog(null,"cycle detected",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,option);
+                            x = JOptionPane.showOptionDialog(null, j,
+                                    "",
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, option, option[0]);
+                        }
+                        if (x == 1) {
+                            System.exit(0);
+                        } else if (x == 0) {
+                            controller.reset();
+                            break;
+                        } else {
+
+                        }
+                        try {
+                            Thread.sleep(800);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+
+                    }
+                });
+                t.start();
+            });
+        });
+    }
+
+    private void refreshCells(GamePanel gamePanel, CellCircle cells) {
+        cells.setList(list);
+        gamePanel.setCells(cells);
+        gamePanel.repaint();
+        gamePanel.revalidate();
+        this.repaint();
+        this.revalidate();
+    }
+
+    public static boolean isInt(String str) {
+        try {
+            @SuppressWarnings("unused")
+            int x = Integer.parseInt(str);
+            return true; // String is an Integer
+        } catch (NumberFormatException e) {
+            return false; // String is not an Integer
+        }
+    }
+
+    private void init() {
         this.setTitle("Jeu de la vie"); // Titre de la fenetre
         this.setSize(400, 600); // Taille de la fenetre
         this.setVisible(true); // visible
@@ -26,8 +125,6 @@ public class View extends JFrame {
         //icon
         ImageIcon logo = new ImageIcon("index.jpeg");
         this.setIconImage(logo.getImage());
-        this.controller = controller;
-//        this.list = l;
         // JPanel boutons / show
         menu = new JPanel(new GridLayout(4, 0));
         jouer = new JPanel();
@@ -50,86 +147,6 @@ public class View extends JFrame {
         menu.add(jouer);
         this.add(menu);
         this.validate();
-
-        // Boutons
-        jeu.getBouton().addActionListener((ActionEvent e) -> {
-            // VERIFICATION N INT POUR LE NOMBRE DE CELLULES
-            if (!isInt(nombre.getText())) {
-                return;
-            }
-            // SI N EST UN INT ALORS ON CREER N CELLULES
-
-            controller.setN(Integer.parseInt(nombre.getText()));
-
-            Cell[] firstCells = new Cell[controller.getN()];
-
-            for (int i = 1; i < controller.getN(); i++) {
-                firstCells[i] = new Cell(0);
-            }
-
-            firstCells[0] = new Cell(1);
-            this.list = firstCells;
-            // setExtendedState(JFrame.MAXIMIZED_BOTH);
-            setLocationRelativeTo(null);
-            setSize(WIDTH, HEIGHT);
-            // CODE
-            this.menu.setVisible(false);
-            this.jouer.setVisible(false);
-            CellCircle cells = new CellCircle(HEIGHT / 3, list.length, WIDTH / 2,
-                    HEIGHT / 2, list);
-            GamePanel gamePanel = new GamePanel(cells.getCellViews());
-            gamePanel.setBackground(Color.BLACK);
-            this.add(gamePanel);
-            this.repaint();
-            this.revalidate();
-            Thread t = new Thread(() -> {
-                while (true) {
-                    gamePanel.repaint();
-                    gamePanel.revalidate();
-                    this.repaint();
-                    this.revalidate();
-                    cells.setList(list);
-                    gamePanel.setCells(cells.getCellViews());
-
-                    //JOptionPane
-                    list = controller.startGameOfLife(list);
-                    int x = -1;
-                    String[] option = {"choose a new configuration", "Quit"};
-                    JLabel j = new JLabel("Cycle detected", SwingConstants.CENTER);
-                    j.setFont(new Font("Serif", Font.BOLD, 20));
-                    if (controller.isCycleFound()) {
-                        //JOptionPane.showOptionDialog(null,"cycle detected",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,option);
-                        x = JOptionPane.showOptionDialog(null, j,
-                                "",
-                                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, option, option[0]);
-                    }
-                    if (x == 1) {
-                        System.exit(0);
-                    } else if (x == 0) {
-                        controller.reset();
-                        break;
-                    } else {
-
-                    }
-                    try {
-                        Thread.sleep(800);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-
-                }
-            });
-            t.start();
-        });
     }
 
-    public static boolean isInt(String str) {
-        try {
-            @SuppressWarnings("unused")
-            int x = Integer.parseInt(str);
-            return true; // String is an Integer
-        } catch (NumberFormatException e) {
-            return false; // String is not an Integer
-        }
-    }
 }

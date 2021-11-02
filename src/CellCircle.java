@@ -34,15 +34,25 @@ public class CellCircle {
         return k;
     }
 
+    public Cell[] getCells() {
+        return cells;
+    }
+
     public void setList(Cell[] cells) {
         this.cells = cells;
         int s = 250 / n;
         for (int i = 0; i < n; i++) {
-            cells[i].cellView.x = (int) (radius * Math.cos(angle * i) + h - s);
-            cells[i].cellView.y = (int) (radius * Math.sin(angle * i) + k - s);
-            cells[i].cellView.alive = cells[i].getState() == 1;
-            cells[i].cellView.size = 500 / n;
+            int xTmp = (int) (radius * Math.cos(angle * i) + h - s);
+            int yTmp = (int) (radius * Math.sin(angle * i) + k - s);
+            int size = 500 / n;
+            cells[i].cellView.setX(xTmp);
+            cells[i].cellView.setY(yTmp);
+            cells[i].cellView.setAlive(cells[i].isAlive());
+            cells[i].cellView.setRadius(size);
         }
+    }
+
+    private record Position(int x, int y) {
     }
 }
 

@@ -1,22 +1,23 @@
 public class Cell {
-    private int state;
+    private boolean alive;
     public CellView cellView;
 
-    public Cell(int state) {
-        this.state = state;
+    public Cell(boolean state) {
+        this.alive = state;
         this.cellView = new CellView();
     }
 
-    public int getState() {
-        return state;
+    public boolean isAlive() {
+        return alive;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setLive(boolean alive) {
+        this.alive = alive;
+        this.cellView.setAlive(alive);
     }
 
     @Override
     public String toString() {
-        return String.valueOf(getState());
+        return isAlive() ? "1" : "0";
     }
 }

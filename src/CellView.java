@@ -2,9 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CellView extends JComponent {
-    public int x, y;
-    public boolean alive = true;
-    public int size = 50;
+    private int x, y;
+    private boolean alive = true;
+    private int radius = 50;
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -13,6 +13,38 @@ public class CellView extends JComponent {
             g.setColor(Color.GREEN);
         else
             g.setColor(Color.RED);
-        g.fillOval(x, y, size, size);
+        g.fillOval(x, y, radius, radius);
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public boolean isAlive() {
+        return alive;
     }
 }

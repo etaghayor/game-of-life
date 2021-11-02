@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Controller {
     private int n;
@@ -19,16 +18,16 @@ public class Controller {
         System.out.println(cellsToString(firstCells));
         Cell[] nextStateCells = new Cell[n];
         for (int i = 0; i < n; i++) {
-            if (firstCells[i].getState() == 1) {
+            if (firstCells[i].isAlive()) {
                 if (atLeastOneNeighbor(firstCells, i))
-                    nextStateCells[i] = new Cell(0);
+                    nextStateCells[i] = new Cell(false);
                 else
-                    nextStateCells[i] = new Cell(1);
+                    nextStateCells[i] = new Cell(true);
             } else {
                 if (exactlyOneNeighbor(firstCells, i))
-                    nextStateCells[i] = new Cell(1);
+                    nextStateCells[i] = new Cell(true);
                 else
-                    nextStateCells[i] = new Cell(0);
+                    nextStateCells[i] = new Cell(false);
             }
         }
         cycleFound = checkCycle(cells, nextStateCells);
@@ -70,25 +69,25 @@ public class Controller {
     private boolean atLeastOneNeighbor(Cell[] cells, int i) {
         int n = cells.length - 1;
         if (i == 0) {
-            return cells[n].getState() == 1 || cells[i + 1].getState() == 1;
+            return cells[n].isAlive() || cells[i + 1].isAlive();
         } else if (i == n) {
-            return cells[0].getState() == 1 || cells[i - 1].getState() == 1;
+            return cells[0].isAlive() || cells[i - 1].isAlive();
         } else {
-            return cells[i - 1].getState() == 1 || cells[i + 1].getState() == 1;
+            return cells[i - 1].isAlive() || cells[i + 1].isAlive();
         }
     }
 
     private boolean exactlyOneNeighbor(Cell[] cells, int i) {
         int n = cells.length - 1;
         if (i == 0) {
-            return (cells[n].getState() == 1 && cells[i + 1].getState() == 0)
-                    || (cells[n].getState() == 0 && cells[i + 1].getState() == 1);
+            return (cells[n].isAlive() && !cells[i + 1].isAlive())
+                    || (!cells[n].isAlive() && cells[i + 1].isAlive());
         } else if (i == n) {
-            return (cells[0].getState() == 1 && cells[i - 1].getState() == 0)
-                    || (cells[0].getState() == 0 && cells[i - 1].getState() == 1);
+            return (cells[0].isAlive() && !cells[i - 1].isAlive())
+                    || (!cells[0].isAlive() && cells[i - 1].isAlive());
         } else {
-            return (cells[i - 1].getState() == 1 && cells[i + 1].getState() == 0)
-                    || (cells[i - 1].getState() == 0 && cells[i + 1].getState() == 1);
+            return (cells[i - 1].isAlive() && !cells[i + 1].isAlive())
+                    || (!cells[i - 1].isAlive() && cells[i + 1].isAlive());
         }
     }
 
